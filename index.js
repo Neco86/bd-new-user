@@ -2,7 +2,7 @@ const https = require("https");
 
 const getCookie = (generateNew) => {
     if (generateNew) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             https
                 .get("https://www.baidu.com/", (res) => {
                     const cookie =
@@ -12,8 +12,8 @@ const getCookie = (generateNew) => {
                     globalThis.BD_NEW_USER = cookie;
                     resolve(cookie);
                 })
-                .on("error", (err) => {
-                    reject(err);
+                .on("error", () => {
+                    resolve("");
                 });
         });
     } else if (globalThis.BD_NEW_USER) {
@@ -29,16 +29,18 @@ exports.rulesServer = (server) => {
 
         getCookie(ruleValue && new RegExp(ruleValue).test(url)).then(
             (cookie) => {
-                const rule = `
-            \`\`\`reqHeaders
-            Cookie: ${cookie}
-            \`\`\`
-            \`\`\`resHeaders
-            Bd-New-User: ${cookie}
-            \`\`\`
-            * reqHeaders://{reqHeaders} resHeaders://{resHeaders}
-            `;
-                res.end(rule);
+                if (cookie) {
+                    const rule = [
+                        '\`\`\`reqHeaders',
+                        `Cookie: ${cookie}`,
+                        '\`\`\`',
+                        '\`\`\`resHeaders',
+                        `Bd-New-User: ${cookie}`,
+                        '\`\`\`',
+                        '* reqHeaders://{reqHeaders} resHeaders://{resHeaders}',
+                    ].join('\n');
+                    res.end(rule);
+                }
             }
         );
     });

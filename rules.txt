@@ -1,0 +1,2 @@
+www.bd-new-user.com/api whistle.bd-new-user://^\/api\/createBdNewUser statusCode://200
+www.bd-new-user.com file://`index.html`

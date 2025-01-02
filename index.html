@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BD New User</title>
+</head>
+<body>
+    <script>
+        fetch('/api/createBdNewUser').then(res => {
+            const user = res.headers.get('Bd-New-User');
+            if (user) {
+                document.body.innerHTML = `<h1>Create New User Success!<br>${res.headers.get('Bd-New-User')}</h1>`;
+            }
+            else {
+                document.body.innerHTML = '<h1>Please Install whistle.bd-new-user!</h1>';
+            }
+        });
+    </script>
+</body>
+</html>
